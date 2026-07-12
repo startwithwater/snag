@@ -5,7 +5,21 @@ out
 *.log
 build/tools/yt-dlp*
 build/tools/ffmpeg*
+audit/
+
+# Environment / secrets
+.env
+.env.local
+
+# Claude Code local/runtime state (machine-specific, churning).
+# Keep .claude/ commands, skills, agents, and settings.json TRACKED —
+# only ignore the noisy local files.
 .claude/settings.local.json
+.claude/launch.json
+.claude/scheduled_tasks.lock
+
+# Codex + cross-tool local mirrors (machine-specific; duplicate .claude/ content).
+# This is the "keep local" default — if you ever want to share Codex project
+# config across machines, un-ignore .codex/config.toml specifically.
 .codex/
 .agents/
-audit/

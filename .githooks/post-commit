@@ -1,0 +1,18 @@
+#!/bin/sh
+# Auto-push after every commit on this repo.
+# Installed via: git config core.hooksPath .githooks
+
+# Don't push during rebase, merge, or bisect
+git_dir=$(git rev-parse --git-dir 2>/dev/null) || exit 0
+case "$git_dir" in
+  *rebase-*|*merge-*|*bisect-*) exit 0 ;;
+esac
+
+# Only push if we're on a branch (not detached HEAD) — worktrees on a
+# throwaway branch push too, which is fine; they get cleaned up on merge.
+git symbolic-ref --short HEAD >/dev/null 2>&1 || exit 0
+
+# Push the current branch, then push tags as a backstop (lightweight tags
+# are not covered by --follow-tags). Never use --force.
+git push 2>&1 || true
+git push --tags 2>&1 || true
