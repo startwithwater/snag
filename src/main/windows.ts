@@ -11,6 +11,7 @@ import appIconPath from '../../build/icon.ico?asset'
 
 let mainWindow: BrowserWindow | null = null
 let quickWindow: BrowserWindow | null = null
+const pendingSettingsWindows = new Set<number>()
 
 // Once quitting starts, the quick window's hide-instead-of-close interception
 // must stand down or app.quit() would be blocked forever.
@@ -169,6 +170,17 @@ export function ensureMainWindow(): BrowserWindow {
   mainWindow.show()
   mainWindow.focus()
   return mainWindow
+}
+
+export function openSettingsWindow(): void {
+  const win = ensureMainWindow()
+  if (win.webContents.isLoading()) pendingSettingsWindows.add(win.webContents.id)
+  else win.webContents.send('openSettings')
+}
+
+export function consumePendingOpenSettings(webContentsId: number): boolean {
+  if (!pendingSettingsWindows.delete(webContentsId)) return false
+  return true
 }
 
 const QUICK_WIDTH = 460

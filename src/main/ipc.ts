@@ -10,6 +10,7 @@ import { loadSettings, saveSettings } from './settings'
 import { getToolStatus, updateYtdlp, resetToolCache } from './ytdlp'
 import {
   consumePendingExternalUrl,
+  consumePendingOpenSettings,
   deliverExternalUrl,
   ensureMainWindow,
   clearCachedYtdlpUpdate,
@@ -331,6 +332,10 @@ export function registerIpc(): void {
 
   handleTrusted('consumePendingExternalUrl', async (e): Promise<string | null> => {
     return consumePendingExternalUrl(e.sender.id)
+  })
+
+  handleTrusted('consumePendingOpenSettings', async (e): Promise<boolean> => {
+    return consumePendingOpenSettings(e.sender.id)
   })
 
   handleTrusted('openInMainWindow', async (_e, url: string): Promise<void> => {

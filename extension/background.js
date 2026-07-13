@@ -211,6 +211,10 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     callSnag('/defaults', { method: 'GET' }, 3000).then(sendResponse)
     return true
   }
+  if (message.type === 'snag:open-settings') {
+    callSnag('/open-settings', { method: 'POST', body: '{}' }, 3000).then(sendResponse)
+    return true
+  }
   if (message.type === 'snag:analyze') {
     callSnag(
       '/analyze',

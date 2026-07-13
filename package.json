@@ -1,6 +1,6 @@
 {
   "name": "snag",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "description": "Snag — a simple, powerful video & audio downloader powered by yt-dlp",
   "author": "flodisterhoft-ops",
   "license": "MIT",

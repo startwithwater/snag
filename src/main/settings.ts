@@ -38,7 +38,9 @@ function defaultSettings(): Settings {
     runInBackground: true,
     launchAtLogin: false,
     bestQualityMode: true,
-    multiAudio: { enabled: false, languages: ['en', 'de'] },
+    // An empty list marks a fresh install that has not chosen preferences yet.
+    // Pickers still fall back to the video's default/English track.
+    multiAudio: { enabled: false, languages: [] },
     autoCheckUpdates: true,
     lastUpdateCheck: 0
   }

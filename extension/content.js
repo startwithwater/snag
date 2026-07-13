@@ -287,6 +287,9 @@
     .chip { flex: 1; min-width: 0; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 5px 6px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.13); background: #0f1116; color: #a7adb7; font-size: 11px; font-weight: 600; cursor: pointer; transition: border-color .13s, color .13s, background .13s; }
     .chip:hover { border-color: rgba(255,255,255,0.3); }
     .chip.on { background: rgba(198,242,77,0.13); border-color: #c6f24d; color: #eef0f3; }
+    .lang-pref { padding: 10px; border: 1px solid rgba(198,242,77,0.22); border-radius: 10px; background: rgba(198,242,77,0.055); }
+    .lang-pref p { margin: 0 0 8px; color: #a7adb7; font-size: 11.5px; line-height: 1.4; }
+    .lang-pref .btn2 { width: 100%; padding: 8px 10px; }
 
     /* footer: download / progress / done */
     .foot { padding: 10px 12px 12px; border-top: 1px solid rgba(255,255,255,0.07); margin-top: 7px; display: flex; flex-direction: column; }
@@ -753,15 +756,33 @@
         if (state.groups.length >= 2) {
           const lgroup = el('div', 'group')
           lgroup.appendChild(el('div', 'lbl2', 'Language'))
-          const langs = el('div', 'chips')
-          for (const g of state.groups) {
-            const key = g.language || ''
-            const p = el('button', 'chip' + (state.audioLang === key ? ' on' : ''), langLabel(g.language) + (g.isDefault ? ' ★' : ''))
-            p.type = 'button'
-            p.addEventListener('click', () => { state.audioLang = key; buildAudioView(); updateGo() })
-            langs.appendChild(p)
+          const favorites = (state.defaults?.favorites || []).map(langBase).filter(Boolean)
+          if (!favorites.length) {
+            const prompt = el('div', 'lang-pref')
+            prompt.appendChild(el('p', null, 'Set your preferred audio language in Settings.'))
+            const settings = el('button', 'btn2 accent2', 'Open Settings')
+            settings.type = 'button'
+            settings.addEventListener('click', async () => {
+              const res = await sendMessage({ type: 'snag:open-settings' })
+              if (res && res.ok) closePanel()
+            })
+            prompt.appendChild(settings)
+            lgroup.appendChild(prompt)
+          } else {
+            const preferred = state.groups.filter((g) => favorites.includes(langBase(g.language)))
+            const visible = preferred.length
+              ? preferred
+              : state.groups.filter((g) => (g.language || '') === state.audioLang).slice(0, 1)
+            const langs = el('div', 'chips')
+            for (const g of visible) {
+              const key = g.language || ''
+              const p = el('button', 'chip' + (state.audioLang === key ? ' on' : ''), langLabel(g.language) + (g.isDefault ? ' ★' : ''))
+              p.type = 'button'
+              p.addEventListener('click', () => { state.audioLang = key; buildAudioView(); updateGo() })
+              langs.appendChild(p)
+            }
+            lgroup.appendChild(langs)
           }
-          lgroup.appendChild(langs)
           audioView.appendChild(lgroup)
         }
       }

@@ -3,6 +3,11 @@
 Every published Snag update is recorded here. The same release notes are shown
 inside Snag before an update is installed.
 
+## 1.8.3 — 2026-07-12
+
+- Replace the Chrome audio picker’s full language list with a clean preferred-language prompt for new users.
+- Open Snag’s Settings directly from that prompt and show only configured preferred languages afterward.
+
 ## 1.8.2 — 2026-07-12
 
 - Make download buttons on large YouTube homepage hover previews analyze the linked video instead of the homepage.

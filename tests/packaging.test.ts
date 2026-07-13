@@ -27,6 +27,14 @@ describe('Windows packaging', () => {
     expect(content).toContain("el('strong', null, 'Opened in Snag')")
     expect(content).not.toContain('void start()\n          return')
     expect(readFileSync('extension/background.js', 'utf8')).toContain("apiFetch(port, '/health'")
+    expect(content).toContain('Set your preferred audio language in Settings.')
+    expect(content).toContain("type: 'snag:open-settings'")
+    expect(content).toContain('state.groups.filter((g) => favorites.includes(langBase(g.language)))')
+
+    const windows = readFileSync('src/main/windows.ts', 'utf8')
+    const preload = readFileSync('src/preload/index.ts', 'utf8')
+    expect(windows).toContain("win.webContents.send('openSettings')")
+    expect(preload).toContain("ipcRenderer.on('openSettings', listener)")
   })
 
   it('opens Telegram with the file and retains the Windows Share fallback', () => {

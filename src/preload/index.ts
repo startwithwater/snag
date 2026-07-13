@@ -37,10 +37,16 @@ const api: Api = {
     return () => ipcRenderer.removeListener('jobAdded', listener)
   },
   consumePendingExternalUrl: () => ipcRenderer.invoke('consumePendingExternalUrl'),
+  consumePendingOpenSettings: () => ipcRenderer.invoke('consumePendingOpenSettings'),
   onExternalUrl: (cb: (url: string) => void) => {
     const listener = (_e: IpcRendererEvent, url: string): void => cb(url)
     ipcRenderer.on('externalUrl', listener)
     return () => ipcRenderer.removeListener('externalUrl', listener)
+  },
+  onOpenSettings: (cb: () => void) => {
+    const listener = (): void => cb()
+    ipcRenderer.on('openSettings', listener)
+    return () => ipcRenderer.removeListener('openSettings', listener)
   },
   openInMainWindow: (url: string) => ipcRenderer.invoke('openInMainWindow', url),
   installBrowserExtension: () => ipcRenderer.invoke('installBrowserExtension'),

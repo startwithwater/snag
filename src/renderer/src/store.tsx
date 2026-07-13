@@ -129,6 +129,9 @@ export function StoreProvider({ children }: { children: ReactNode }): JSX.Elemen
       setView('home')
     }
     const offExternal = window.api.onExternalUrl(receiveUrl)
+    const offOpenSettings = window.api.onOpenSettings(() => {
+      if (mounted) setView('settings')
+    })
     const offUpdates = window.api.onUpdateAvailable((u: UpdateAvailability) => {
       if (mounted) setUpdates(u)
     })
@@ -136,12 +139,16 @@ export function StoreProvider({ children }: { children: ReactNode }): JSX.Elemen
     void window.api.consumePendingExternalUrl().then((url) => {
       if (url) receiveUrl(url)
     })
+    void window.api.consumePendingOpenSettings().then((open) => {
+      if (mounted && open) setView('settings')
+    })
 
     return () => {
       mounted = false
       offAdded()
       offProgress()
       offExternal()
+      offOpenSettings()
       offUpdates()
     }
   }, [initialize])

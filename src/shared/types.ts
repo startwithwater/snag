@@ -254,7 +254,9 @@ export interface Api {
   onJobAdded: (cb: (j: DownloadJob) => void) => () => void
   // Browser handoff (snag:// deep links)
   consumePendingExternalUrl: () => Promise<string | null>
+  consumePendingOpenSettings: () => Promise<boolean>
   onExternalUrl: (cb: (url: string) => void) => () => void
+  onOpenSettings: (cb: () => void) => () => void
   openInMainWindow: (url: string) => Promise<void>
   installBrowserExtension: () => Promise<ExtensionInstallResult>
   getBrowserExtensionPath: () => Promise<string | null>

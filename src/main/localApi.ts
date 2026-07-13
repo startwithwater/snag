@@ -7,6 +7,7 @@ import { analyze } from './metadata'
 import { downloadManager } from './downloader'
 import { loadSettings, saveSettings } from './settings'
 import { isHttpUrl } from './protocol'
+import { openSettingsWindow } from './windows'
 import {
   isChromeExtensionOrigin,
   isSnagExtensionOrigin,
@@ -198,6 +199,12 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
       preferredContainer: s.preferredVideoContainer,
       preferredAudioFormat: s.preferredAudioFormat
     })
+    return
+  }
+
+  if (req.method === 'POST' && path === '/open-settings') {
+    openSettingsWindow()
+    sendJson(res, 200, { ok: true }, origin)
     return
   }
 
